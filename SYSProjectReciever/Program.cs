@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,25 +11,33 @@ namespace UdpReciever
 {
     class Program
     {
-        private const int Port = 7000; //TODO husk port
+        private static string URL = "https://udprest20220504132553.azurewebsites.net/api/colour";
+        private const int Port = 4109; //TODO husk port
         static void Main()
         {
             IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, Port);
-                using (UdpClient socket = new UdpClient(ipEndPoint))
+            using (UdpClient socket = new UdpClient(ipEndPoint))
+            {
+                IPEndPoint remoteEndPoint = new IPEndPoint(0, 0);
+                while (true)
                 {
-                    IPEndPoint remoteEndPoint = new IPEndPoint(0, 0);
-                    while (true)
-                    {
-                        Console.WriteLine("Waiting for broadcast {0}", socket.Client.LocalEndPoint);
-                        byte[] datagramReceived = socket.Receive(ref remoteEndPoint);
+                    Console.WriteLine("Waiting for broadcast {0}", socket.Client.LocalEndPoint);
+                    byte[] datagramReceived = socket.Receive(ref remoteEndPoint);
 
-                        string message = Encoding.ASCII.GetString(datagramReceived, 0, datagramReceived.Length);
-                        Console.WriteLine("Receives {0} bytes from {1} port {2} message {3}", datagramReceived.Length,
-                            remoteEndPoint.Address, remoteEndPoint.Port, message);
-                        // TODO Kalde rest post 
-                        
-                    }
+                    string message = Encoding.ASCII.GetString(datagramReceived, 0, datagramReceived.Length);
+                    Console.WriteLine("Receives {0} bytes from {1} port {2} message {3}", datagramReceived.Length,
+                        remoteEndPoint.Address, remoteEndPoint.Port, message);
+
+                    HttpClient clint = new HttpClient();
+
+                    HttpContent content = new StringContent(message, Encoding.UTF8, "application/json");
+
+                    clint.PostAsync(URL, content);
+                    // TODO Kalde rest post 
+
                 }
+
+            }
         }
 
         private static void Parse(string response)
