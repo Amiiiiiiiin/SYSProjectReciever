@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -12,7 +12,9 @@ namespace UdpReciever
     class Program
     {
         private static string URL = "https://udprest20220504132553.azurewebsites.net/api/colour";
-        private const int Port = 4109;
+
+      private const int Port = 4109; //TODO husk port
+      
         static void Main()
         {
             IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, Port);
@@ -35,8 +37,8 @@ namespace UdpReciever
                     HttpResponseMessage response = client.PutAsync(URL + "?colour=" + message, null).Result;
                     Console.WriteLine(response.StatusCode);
 
+                    // TODO Kalde rest post
 
-                    // TODO Kalde rest post 
                 }
 
             }
