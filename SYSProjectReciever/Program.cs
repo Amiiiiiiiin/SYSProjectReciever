@@ -11,7 +11,7 @@ namespace UdpReciever
 {
     class Program
     {
-        private static string URL = "https://udprest20220504132553.azurewebsites.net/api/colour";
+        private static string URL = "https://udprest20220504132553.azurewebsites.net/api/Colour";
 
       private const int Port = 4109; //TODO husk port
       
@@ -32,9 +32,9 @@ namespace UdpReciever
 
                     HttpClient client = new HttpClient();
 
-                    //HttpContent content = new StringContent(message, Encoding.UTF8);
+                    //HttpContent content = new StringContent(message, Encoding.UTF8,"application/json");
 
-                    HttpResponseMessage response = client.PutAsync(URL + "?colour=" + message, null).Result;
+                    HttpResponseMessage response = client.PutAsync(URL + "?updatedGenreColour=" + message, null).Result;
                     Console.WriteLine(response.StatusCode);
 
                     // TODO Kalde rest post
